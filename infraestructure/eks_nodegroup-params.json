@@ -1,0 +1,24 @@
+[
+    {
+        "ParameterKey": "EnvironmentName",
+        "ParameterValue": "CloudAppi-CodeChallenge"
+    },    
+    {
+        "ParameterKey": "NodeGroupName",
+        "ParameterValue": "NodeGroupKubernetes"
+    },    
+    {
+        "ParameterKey": "ClusterName",
+        "ParameterValue": "ClusterEKS-CA"
+    },
+    {
+        "ParameterKey": "NodeImageId",
+        "ParameterValue": "ami-0e710550577202c55"
+    },
+    {
+        "ParameterKey": "KeyName",
+        "ParameterValue": "new_pair_ec2"
+    }
+
+]
+
