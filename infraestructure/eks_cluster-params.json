@@ -1,0 +1,12 @@
+[
+    {
+        "ParameterKey": "EnvironmentName",
+        "ParameterValue": "CloudAppi-CodeChallenge"
+    },    
+    {
+        "ParameterKey": "ClusterName",
+        "ParameterValue": "ClusterEKS-CA"
+    }
+
+]
+

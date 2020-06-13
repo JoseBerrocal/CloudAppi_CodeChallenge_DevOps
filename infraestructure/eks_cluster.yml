@@ -1,0 +1,43 @@
+Description: >
+    Jose Berrocal / CloudAppi
+    Amazon EKS - EKS Cluster
+    This template deploys a EKS cluster in the VPC configured previously.
+
+Parameters:
+
+    EnvironmentName:
+        Description: An environment name that will be prefixed to resource names
+        Type: String
+
+    ClusterName:
+        Description: Name of the cluster
+        Type: String
+        Default: ClusterEKSFP
+
+Resources:
+
+  MyEKSCluster:
+    Type: 'AWS::EKS::Cluster'
+    Properties:
+      Name: !Ref ClusterName
+      Version: '1.14'
+      RoleArn: >-
+        arn:aws:iam::545867861938:role/EKS-Service-Role
+      ResourcesVpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              !Sub "${EnvironmentName}-SECURITY-GROUP"
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub ${EnvironmentName}-SUBNET-IDs-01
+          - Fn::ImportValue:
+              !Sub ${EnvironmentName}-SUBNET-IDs-02
+          
+Outputs:
+
+  KubeClusterName:
+    Description: The Kubernetes cluster
+    Value: !Ref MyEKSCluster
+    Export:
+        Name: !Sub ${EnvironmentName}-KubeClusterName
+
