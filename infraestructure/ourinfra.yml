@@ -1,0 +1,159 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Amazon EKS Sample VPC'
+Description: >
+    Jose Berrocal / CloudAppi
+    Amazon EKS Sample VPC
+    This template deploys a VPC, with a private subnets spread across two 
+    Availabilty Zones. It deploys an Internet Gateway, with a default 
+    route on the subnets.
+
+Parameters:
+
+  EnvironmentName:
+    Type: String
+    Default: "CloudAppi-CodeChallenge"
+    Description: An environment name that will be prefixed to resource names
+
+  VpcBlock:
+    Type: String
+    Default: 192.168.0.0/16
+    Description: The CIDR range for the VPC. This should be a valid private (RFC 1918) CIDR range.
+
+  Subnet01Block:
+    Type: String
+    Default: 192.168.64.0/18
+    Description: CidrBlock for subnet 01 within the VPC
+
+  Subnet02Block:
+    Type: String
+    Default: 192.168.128.0/18
+    Description: CidrBlock for subnet 02 within the VPC
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: "Worker Network Configuration"
+        Parameters:
+          - VpcBlock
+          - Subnet01Block
+          - Subnet02Block
+
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock:  !Ref VpcBlock
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+      - Key: Name
+        Value: !Sub '${EnvironmentName}-VPC'
+
+  InternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+
+  VPCGatewayAttachment:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: Public Subnets
+      - Key: Network
+        Value: Public
+
+  Route:
+    DependsOn: VPCGatewayAttachment
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  Subnet01:
+    Type: AWS::EC2::Subnet
+    Metadata:
+      Comment: Subnet 01
+    Properties:
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      CidrBlock:
+        Ref: Subnet01Block
+      VpcId:
+        Ref: VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${EnvironmentName}-Subnet01"
+
+  Subnet02:
+    Type: AWS::EC2::Subnet
+    Metadata:
+      Comment: Subnet 02
+    Properties:
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
+      CidrBlock:
+        Ref: Subnet02Block
+      VpcId:
+        Ref: VPC
+      Tags:
+      - Key: Name
+        Value: !Sub "${EnvironmentName}-Subnet02"
+
+  Subnet01RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet01
+      RouteTableId: !Ref RouteTable
+
+  Subnet02RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet02
+      RouteTableId: !Ref RouteTable
+
+  ControlPlaneSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Cluster communication with worker nodes
+      VpcId: !Ref VPC
+
+Outputs:
+
+  SubnetIds:
+    Description: All subnets in the VPC
+    Value: !Join [ ",", [ !Ref Subnet01, !Ref Subnet02] ]
+    Export:
+        Name: !Sub ${EnvironmentName}-SUBNET-IDs
+
+  SubnetId01:
+    Description: Subnet 01 in the VPC
+    Value: !Ref Subnet01
+    Export:
+        Name: !Sub ${EnvironmentName}-SUBNET-IDs-01
+
+  SubnetId02:
+    Description: Subnet 02 in the VPC
+    Value: !Ref Subnet02
+    Export:
+        Name: !Sub ${EnvironmentName}-SUBNET-IDs-02           
+
+  SecurityGroups:
+    Description: Security group for the cluster control plane communication with worker nodes
+    Value: !Join [ ",", [ !Ref ControlPlaneSecurityGroup ] ]
+    Export:
+        Name: !Sub ${EnvironmentName}-SECURITY-GROUP
+
+  VpcId:
+    Description: The VPC Id
+    Value: !Ref VPC
+    Export:
+        Name: !Sub ${EnvironmentName}-VPC-ID    
