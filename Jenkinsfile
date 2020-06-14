@@ -21,9 +21,10 @@ pipeline {
 
 
        stage('Desplegar Infraestructura') {
-           when {
+           when { anyOf {
+               branch 'master' 
                branch 'infra'
-           }
+           }}          
              steps {
                 echo 'Creación del VPC para el EKS'
                 sh "aws s3 ls"
@@ -58,7 +59,10 @@ pipeline {
 
 
        stage('Construir la Imagen Docker') {
-
+           when { anyOf {
+               branch 'master' 
+               branch 'desple_api'
+           }}          
              steps {
                  checkout scm
                 echo 'Construir la imagen Docker'
@@ -71,6 +75,10 @@ pipeline {
 
 
        stage('Subir la Imagen Docker') {
+           when { anyOf {
+               branch 'master' 
+               branch 'desple_api'
+           }}          
              steps {
                 echo 'Subir la Imagen Docker'
                 script {
@@ -85,6 +93,10 @@ pipeline {
 
 
        stage('Remover la imagen Docker') {
+           when { anyOf {
+               branch 'master' 
+               branch 'desple_api'
+           }}           
              steps {
                 echo 'Remover la imagen Docker'
                 sh "docker rmi $repodocker:$BUILD_NUMBER"
@@ -93,6 +105,27 @@ pipeline {
                  }
              }
 
+        stage('Desplegar la web API') {
+           when {
+               branch 'desple_api'
+           }           
+             steps {
+                 echo 'Desplegar la web API'
+                 echo 'Crear el Despliege'
+                 sh "aws eks --region us-west-2 update-kubeconfig --name ClusterEKS-CA"
+                 sh "sleep 5"
+                 sh "kubectl apply -f deployment_cloudappi.yaml"
+                 echo 'Exponer el servicio http'
+                 sh "kubectl expose deployment cloudappi-api --type=LoadBalancer --name=cloudappi-api-svc-http"
+                 sh "sleep 15"
+                 sh "kubectl get pods"
+                 sh "kubectl get deployment"
+                 sh "kubectl get svc"
+                 sh "sleep 15"
+                 sh "sh ext_ip_svc.sh"
+                 echo 'Despliege de la web API satisfactorio'
+                 }
+             }
 
     }
 }
