@@ -5,4 +5,4 @@ OUTPUT="$(kubectl describe services cloudappi-api-svc-http | grep "LoadBalancer 
 
 echo "${OUTPUT}"
 
-echo "Access the following URL http://${OUTPUT}:5000"
+echo "Access the following URL http://${OUTPUT}:8080"

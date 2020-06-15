@@ -21,10 +21,12 @@ pipeline {
 
 
        stage('Desplegar Infraestructura') {
+
            when { anyOf {
                branch 'master' 
                branch 'infra'
-           }}          
+           }}       
+
              steps {
                 echo 'Creación del VPC para el EKS'
                 sh "aws s3 ls"
@@ -59,10 +61,13 @@ pipeline {
 
 
        stage('Construir la Imagen Docker') {
+
            when { anyOf {
                branch 'master' 
                branch 'desple_api'
+               branch 'appv2_ima'
            }}          
+
              steps {
                  checkout scm
                 echo 'Construir la imagen Docker'
@@ -75,10 +80,13 @@ pipeline {
 
 
        stage('Subir la Imagen Docker') {
+
            when { anyOf {
                branch 'master' 
                branch 'desple_api'
+               branch 'appv2_ima'
            }}          
+           
              steps {
                 echo 'Subir la Imagen Docker'
                 script {
@@ -96,6 +104,7 @@ pipeline {
            when { anyOf {
                branch 'master' 
                branch 'desple_api'
+               branch 'appv2_ima'
            }}           
              steps {
                 echo 'Remover la imagen Docker'
@@ -106,9 +115,11 @@ pipeline {
              }
 
         stage('Desplegar la web API') {
-           when {
+           when { anyOf {
+               branch 'master' 
                branch 'desple_api'
-           }           
+               branch 'appv2_ima'
+           }}           
              steps {
                  echo 'Desplegar la web API'
                  echo 'Crear el Despliege'

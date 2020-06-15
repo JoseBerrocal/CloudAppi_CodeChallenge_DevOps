@@ -19,4 +19,4 @@ spec:
         - name: front-end
           image: joseberrocal/cloudappi-codechallenge:latest
           ports:
-            - containerPort: 5000
+            - containerPort: 8080
