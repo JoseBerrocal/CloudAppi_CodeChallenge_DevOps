@@ -1,0 +1,218 @@
+{
+	"info": {
+		"_postman_id": "727dd8fd-6e51-438f-8725-ffbceb87aa4a",
+		"name": "CloudAppi_Collection",
+		"description": "Test and API web server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Datos Usuarios Todos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8e5b64db-3f9d-4caf-bebd-7200d8c640d5",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Se mostraron resultados\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"country\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/users/getusers/",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"getusers",
+						""
+					]
+				},
+				"description": "Obtener la lista de usuarios"
+			},
+			"response": []
+		},
+		{
+			"name": "Crear Usuario",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e453df17-75ca-4859-9b1e-8460053b438c",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"newuserIdcrear\", jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": {{newuserId}},\n  \"name\": \"{{name}}\",\n  \"email\": \"{{email}}\",\n  \"birthDate\": \"{{birthDate}}\",\n  \"address\": {\n    \"id\": {{newaddressId}},\n    \"street\": \"{{street}}\",\n    \"state\": \"{{state}}\",\n    \"city\": \"{{city}}\",\n    \"country\": \"{{country}}\",\n    \"zip\": \"{{zip}}\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users/createUsers",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"createUsers"
+					]
+				},
+				"description": "Crear un usuario dentro de la lista"
+			},
+			"response": []
+		},
+		{
+			"name": "Datos Usuario Personal",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "313ea1fa-da94-4323-9723-3d7a658ba02d",
+						"exec": [
+							"user_id = pm.environment.get(\"newuserIdcrear\");",
+							"if(user_id == 0){",
+							"    pm.test(\"El usuario NO fue creado\", function () {",
+							"        pm.expect(pm.response.text()).to.include(user_id) });",
+							"}else{",
+							"    pm.test(\"El usuario fue creado\");",
+							"};",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/users/getusersById/{{newuserId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"getusersById",
+						"{{newuserId}}"
+					]
+				},
+				"description": "Obtener los datos de un usuario"
+			},
+			"response": []
+		},
+		{
+			"name": "Actualizar Usuario",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e453df17-75ca-4859-9b1e-8460053b438c",
+						"exec": [
+							"var var_name = pm.response.json().name;",
+							"if(var_name == \"name\"){",
+							"    pm.test(\"El usuario NO fue actualizado - UpdateById FALLA\", function () {",
+							"        pm.expect(pm.response.text()).to.include(var_name) });",
+							"}else{",
+							"    pm.test(\"El usuario fue actualizado\");",
+							"};"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": {{userId}},\n  \"name\": \"{{UpdateUBI-name}}\",\n  \"email\": \"{{email}}\",\n  \"birthDate\": \"{{birthDate}}\",\n  \"address\": {\n    \"id\": {{addressId}},\n    \"street\": \"{{street}}\",\n    \"state\": \"{{state}}\",\n    \"city\": \"{{city}}\",\n    \"country\": \"{{country}}\",\n    \"zip\": \"{{zip}}\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users/updateUsersById/{{userId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"updateUsersById",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar Usuario",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e453df17-75ca-4859-9b1e-8460053b438c",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": {{userId}},\n  \"name\": \"{{UpdateUBI-name}}\",\n  \"email\": \"{{email}}\",\n  \"birthDate\": \"{{birthDate}}\",\n  \"address\": {\n    \"id\": {{addressId}},\n    \"street\": \"{{street}}\",\n    \"state\": \"{{state}}\",\n    \"city\": \"{{city}}\",\n    \"country\": \"{{country}}\",\n    \"zip\": \"{{zip}}\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/users/deleteUsersById/{{userId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"users",
+						"deleteUsersById",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

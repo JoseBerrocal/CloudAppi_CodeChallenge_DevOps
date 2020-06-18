@@ -1,0 +1,2401 @@
+{
+  "collection": {
+    "_": {
+      "postman_id": "727dd8fd-6e51-438f-8725-ffbceb87aa4a"
+    },
+    "item": [
+      {
+        "id": "506ee044-e32b-450a-8698-483599eb8960",
+        "name": "Datos Usuarios Todos",
+        "request": {
+          "description": {
+            "content": "Obtener la lista de usuarios",
+            "type": "text/plain"
+          },
+          "url": {
+            "path": [
+              "users",
+              "getusers",
+              ""
+            ],
+            "host": [
+              "{{url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "8e5b64db-3f9d-4caf-bebd-7200d8c640d5",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});",
+                "pm.test(\"Se mostraron resultados\", function () {",
+                "    pm.expect(pm.response.text()).to.include(\"country\");",
+                "});"
+              ],
+              "_lastExecutionId": "ec485c9b-e5cf-4768-96d4-dae5d87b0cc9"
+            }
+          }
+        ]
+      },
+      {
+        "id": "e67bdd21-0b81-4044-8f45-6c0b8598457b",
+        "name": "Crear Usuario",
+        "request": {
+          "description": {
+            "content": "Crear un usuario dentro de la lista",
+            "type": "text/plain"
+          },
+          "url": {
+            "path": [
+              "users",
+              "createUsers"
+            ],
+            "host": [
+              "{{url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"id\": {{newuserId}},\n  \"name\": \"{{name}}\",\n  \"email\": \"{{email}}\",\n  \"birthDate\": \"{{birthDate}}\",\n  \"address\": {\n    \"id\": {{newaddressId}},\n    \"street\": \"{{street}}\",\n    \"state\": \"{{state}}\",\n    \"city\": \"{{city}}\",\n    \"country\": \"{{country}}\",\n    \"zip\": \"{{zip}}\"\n  }\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "e453df17-75ca-4859-9b1e-8460053b438c",
+              "type": "text/javascript",
+              "exec": [
+                "var jsonData = pm.response.json();",
+                "pm.environment.set(\"newuserIdcrear\", jsonData.id);"
+              ],
+              "_lastExecutionId": "48913ee1-1aba-4beb-a1b0-37c73c3f5da1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "b4f7cbf9-cb02-4755-8c69-cf9f798fd6dd",
+        "name": "Datos Usuario Personal",
+        "request": {
+          "description": {
+            "content": "Obtener los datos de un usuario",
+            "type": "text/plain"
+          },
+          "url": {
+            "path": [
+              "users",
+              "getusersById",
+              "{{newuserId}}"
+            ],
+            "host": [
+              "{{url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "313ea1fa-da94-4323-9723-3d7a658ba02d",
+              "type": "text/javascript",
+              "exec": [
+                "user_id = pm.environment.get(\"newuserIdcrear\");",
+                "if(user_id == 0){",
+                "    pm.test(\"El usuario NO fue creado\", function () {",
+                "        pm.expect(pm.response.text()).to.include(user_id) });",
+                "}else{",
+                "    pm.test(\"El usuario fue creado\");",
+                "};",
+                "",
+                "",
+                ""
+              ],
+              "_lastExecutionId": "ee6884bb-77d0-4134-a3c1-106ab8ade88a"
+            }
+          }
+        ]
+      },
+      {
+        "id": "4f465209-4fb0-4cb2-8e9f-42106f2899e5",
+        "name": "Actualizar Usuario",
+        "request": {
+          "url": {
+            "path": [
+              "users",
+              "updateUsersById",
+              "{{userId}}"
+            ],
+            "host": [
+              "{{url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "PUT",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"id\": {{userId}},\n  \"name\": \"{{UpdateUBI-name}}\",\n  \"email\": \"{{email}}\",\n  \"birthDate\": \"{{birthDate}}\",\n  \"address\": {\n    \"id\": {{addressId}},\n    \"street\": \"{{street}}\",\n    \"state\": \"{{state}}\",\n    \"city\": \"{{city}}\",\n    \"country\": \"{{country}}\",\n    \"zip\": \"{{zip}}\"\n  }\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "e453df17-75ca-4859-9b1e-8460053b438c",
+              "type": "text/javascript",
+              "exec": [
+                "var var_name = pm.response.json().name;",
+                "if(var_name == \"name\"){",
+                "    pm.test(\"El usuario NO fue actualizado - UpdateById FALLA\", function () {",
+                "        pm.expect(pm.response.text()).to.include(var_name) });",
+                "}else{",
+                "    pm.test(\"El usuario fue actualizado\");",
+                "};"
+              ],
+              "_lastExecutionId": "8867e2e1-bb8f-4132-be1a-26f94a82d040"
+            }
+          }
+        ]
+      },
+      {
+        "id": "2ec4e6e5-742e-435b-808b-d23e8edf7479",
+        "name": "Eliminar Usuario",
+        "request": {
+          "url": {
+            "path": [
+              "users",
+              "deleteUsersById",
+              "{{userId}}"
+            ],
+            "host": [
+              "{{url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "DELETE",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"id\": {{userId}},\n  \"name\": \"{{UpdateUBI-name}}\",\n  \"email\": \"{{email}}\",\n  \"birthDate\": \"{{birthDate}}\",\n  \"address\": {\n    \"id\": {{addressId}},\n    \"street\": \"{{street}}\",\n    \"state\": \"{{state}}\",\n    \"city\": \"{{city}}\",\n    \"country\": \"{{country}}\",\n    \"zip\": \"{{zip}}\"\n  }\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "e453df17-75ca-4859-9b1e-8460053b438c",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code is 200\", function () {",
+                "    pm.response.to.have.status(200);",
+                "});"
+              ],
+              "_lastExecutionId": "6dca2ec0-de8b-47db-9116-35a5c8443d7f"
+            }
+          }
+        ]
+      }
+    ],
+    "event": [],
+    "protocolProfileBehavior": {},
+    "variable": [],
+    "info": {
+      "_postman_id": "727dd8fd-6e51-438f-8725-ffbceb87aa4a",
+      "name": "CloudAppi_Collection",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "description": {
+        "content": "Test and API web server",
+        "type": "text/plain"
+      }
+    }
+  },
+  "environment": {
+    "_": {
+      "postman_variable_scope": "environment",
+      "postman_exported_at": "2020-06-16T02:21:17.561Z",
+      "postman_exported_using": "Postman/7.25.0"
+    },
+    "id": "91f11dbb-ee8f-4d77-8a1b-e6404ad9dcce",
+    "name": "Env_CloudAppi_AWS",
+    "values": [
+      {
+        "type": "any",
+        "value": "http://ae18e1b01af7b11eaa41c06d6ebd0c1d-2089794148.us-west-2.elb.amazonaws.com:8080",
+        "key": "url"
+      },
+      {
+        "type": "any",
+        "value": "0",
+        "key": "userId"
+      },
+      {
+        "type": "any",
+        "value": "JoseBerrocal",
+        "key": "name"
+      },
+      {
+        "type": "any",
+        "value": "jose.berrocal@pucp.pe",
+        "key": "email"
+      },
+      {
+        "type": "any",
+        "value": "12/12/1987",
+        "key": "birthDate"
+      },
+      {
+        "type": "any",
+        "value": "2",
+        "key": "newuserId"
+      },
+      {
+        "type": "any",
+        "value": "1",
+        "key": "newaddressId"
+      },
+      {
+        "type": "any",
+        "value": "La Calle",
+        "key": "street"
+      },
+      {
+        "type": "any",
+        "value": "Lince",
+        "key": "state"
+      },
+      {
+        "type": "any",
+        "value": "Lima",
+        "key": "city"
+      },
+      {
+        "type": "any",
+        "value": "Peru",
+        "key": "country"
+      },
+      {
+        "type": "any",
+        "value": "2345",
+        "key": "zip"
+      },
+      {
+        "type": "any",
+        "value": 0,
+        "key": "newuserIdcrear"
+      },
+      {
+        "type": "any",
+        "value": "Jose Actualizado",
+        "key": "UpdateUBI-name"
+      },
+      {
+        "type": "any",
+        "value": "6",
+        "key": "addressId"
+      }
+    ]
+  },
+  "globals": {
+    "id": "c1565bb8-4a07-4fb3-b988-11b6beb9a1e4",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "testScripts": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 0,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 282.6,
+      "responseMin": 171,
+      "responseMax": 680,
+      "responseSd": 199.13874560215547,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1592280141382,
+      "completed": 1592280143177
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 5,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "43c8346a-7442-4a44-b79a-13dedc50c0f2",
+          "httpRequestId": "f1dafd4a-f628-4661-a2d3-b0f18ea7333b"
+        },
+        "item": {
+          "id": "506ee044-e32b-450a-8698-483599eb8960",
+          "name": "Datos Usuarios Todos",
+          "request": {
+            "description": {
+              "content": "Obtener la lista de usuarios",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "users",
+                "getusers",
+                ""
+              ],
+              "host": [
+                "{{url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "8e5b64db-3f9d-4caf-bebd-7200d8c640d5",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Se mostraron resultados\", function () {",
+                  "    pm.expect(pm.response.text()).to.include(\"country\");",
+                  "});"
+                ],
+                "_lastExecutionId": "ec485c9b-e5cf-4768-96d4-dae5d87b0cc9"
+              }
+            }
+          ]
+        },
+        "request": {
+          "description": {
+            "content": "Obtener la lista de usuarios",
+            "type": "text/plain"
+          },
+          "url": {
+            "protocol": "http",
+            "port": "8080",
+            "path": [
+              "users",
+              "getusers",
+              ""
+            ],
+            "host": [
+              "ae18e1b01af7b11eaa41c06d6ebd0c1d-2089794148",
+              "us-west-2",
+              "elb",
+              "amazonaws",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.26.0",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "2c966960-d5f3-481e-b627-9739f66e4ea6",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "ae18e1b01af7b11eaa41c06d6ebd0c1d-2089794148.us-west-2.elb.amazonaws.com:8080",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "9417539e-508e-442d-adc4-c0dbcd02e183",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 16 Jun 2020 04:02:21 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              91,
+              10,
+              32,
+              32,
+              123,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              97,
+              100,
+              100,
+              114,
+              101,
+              115,
+              115,
+              34,
+              58,
+              32,
+              123,
+              10,
+              32,
+              32,
+              32,
+              32,
+              32,
+              32,
+              34,
+              122,
+              105,
+              112,
+              34,
+              58,
+              32,
+              34,
+              122,
+              105,
+              112,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              32,
+              32,
+              34,
+              99,
+              111,
+              117,
+              110,
+              116,
+              114,
+              121,
+              34,
+              58,
+              32,
+              34,
+              99,
+              111,
+              117,
+              110,
+              116,
+              114,
+              121,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              32,
+              32,
+              34,
+              99,
+              105,
+              116,
+              121,
+              34,
+              58,
+              32,
+              34,
+              99,
+              105,
+              116,
+              121,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              32,
+              32,
+              34,
+              115,
+              116,
+              114,
+              101,
+              101,
+              116,
+              34,
+              58,
+              32,
+              34,
+              115,
+              116,
+              114,
+              101,
+              101,
+              116,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              32,
+              32,
+              34,
+              105,
+              100,
+              34,
+              58,
+              32,
+              54,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              32,
+              32,
+              34,
+              115,
+              116,
+              97,
+              116,
+              101,
+              34,
+              58,
+              32,
+              34,
+              115,
+              116,
+              97,
+              116,
+              101,
+              34,
+              10,
+              32,
+              32,
+              32,
+              32,
+              125,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              32,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              105,
+              100,
+              34,
+              58,
+              32,
+              48,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              98,
+              105,
+              114,
+              116,
+              104,
+              68,
+              97,
+              116,
+              101,
+              34,
+              58,
+              32,
+              34,
+              98,
+              105,
+              114,
+              116,
+              104,
+              68,
+              97,
+              116,
+              101,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              32,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              10,
+              32,
+              32,
+              125,
+              44,
+              10,
+              32,
+              32,
+              123,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              97,
+              100,
+              100,
+              114,
+              101,
+              115,
+              115,
+              34,
+              58,
+              32,
+              123,
+              10,
+              32,
+              32,
+              32,
+              32,
+              32,
+              32,
+              34,
+              122,
+              105,
+              112,
+              34,
+              58,
+              32,
+              34,
+              122,
+              105,
+              112,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              32,
+              32,
+              34,
+              99,
+              111,
+              117,
+              110,
+              116,
+              114,
+              121,
+              34,
+              58,
+              32,
+              34,
+              99,
+              111,
+              117,
+              110,
+              116,
+              114,
+              121,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              32,
+              32,
+              34,
+              99,
+              105,
+              116,
+              121,
+              34,
+              58,
+              32,
+              34,
+              99,
+              105,
+              116,
+              121,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              32,
+              32,
+              34,
+              115,
+              116,
+              114,
+              101,
+              101,
+              116,
+              34,
+              58,
+              32,
+              34,
+              115,
+              116,
+              114,
+              101,
+              101,
+              116,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              32,
+              32,
+              34,
+              105,
+              100,
+              34,
+              58,
+              32,
+              54,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              32,
+              32,
+              34,
+              115,
+              116,
+              97,
+              116,
+              101,
+              34,
+              58,
+              32,
+              34,
+              115,
+              116,
+              97,
+              116,
+              101,
+              34,
+              10,
+              32,
+              32,
+              32,
+              32,
+              125,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              32,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              105,
+              100,
+              34,
+              58,
+              32,
+              48,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              98,
+              105,
+              114,
+              116,
+              104,
+              68,
+              97,
+              116,
+              101,
+              34,
+              58,
+              32,
+              34,
+              98,
+              105,
+              114,
+              116,
+              104,
+              68,
+              97,
+              116,
+              101,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              32,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              10,
+              32,
+              32,
+              125,
+              10,
+              93
+            ]
+          },
+          "cookie": [],
+          "responseTime": 680,
+          "responseSize": 504
+        },
+        "id": "506ee044-e32b-450a-8698-483599eb8960",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Se mostraron resultados",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "37dfe40e-ceab-499e-b5a0-c84ffec4bbcf",
+          "length": 5,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "a8516c25-a329-4ffb-a1f8-78f2ae6734de"
+        },
+        "item": {
+          "id": "e67bdd21-0b81-4044-8f45-6c0b8598457b",
+          "name": "Crear Usuario",
+          "request": {
+            "description": {
+              "content": "Crear un usuario dentro de la lista",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "users",
+                "createUsers"
+              ],
+              "host": [
+                "{{url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{newuserId}},\n  \"name\": \"{{name}}\",\n  \"email\": \"{{email}}\",\n  \"birthDate\": \"{{birthDate}}\",\n  \"address\": {\n    \"id\": {{newaddressId}},\n    \"street\": \"{{street}}\",\n    \"state\": \"{{state}}\",\n    \"city\": \"{{city}}\",\n    \"country\": \"{{country}}\",\n    \"zip\": \"{{zip}}\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "e453df17-75ca-4859-9b1e-8460053b438c",
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"newuserIdcrear\", jsonData.id);"
+                ],
+                "_lastExecutionId": "48913ee1-1aba-4beb-a1b0-37c73c3f5da1"
+              }
+            }
+          ]
+        },
+        "request": {
+          "description": {
+            "content": "Crear un usuario dentro de la lista",
+            "type": "text/plain"
+          },
+          "url": {
+            "protocol": "http",
+            "port": "8080",
+            "path": [
+              "users",
+              "createUsers"
+            ],
+            "host": [
+              "ae18e1b01af7b11eaa41c06d6ebd0c1d-2089794148",
+              "us-west-2",
+              "elb",
+              "amazonaws",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.26.0",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "a152a90d-e095-4f8f-8e26-cae558731fbb",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "ae18e1b01af7b11eaa41c06d6ebd0c1d-2089794148.us-west-2.elb.amazonaws.com:8080",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": 246,
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"id\": 2,\n  \"name\": \"JoseBerrocal\",\n  \"email\": \"jose.berrocal@pucp.pe\",\n  \"birthDate\": \"12/12/1987\",\n  \"address\": {\n    \"id\": 1,\n    \"street\": \"La Calle\",\n    \"state\": \"Lince\",\n    \"city\": \"Lima\",\n    \"country\": \"Peru\",\n    \"zip\": \"2345\"\n  }\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "59505da9-4679-496c-bf25-72488a33f5d7",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 16 Jun 2020 04:02:22 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              10,
+              32,
+              32,
+              34,
+              97,
+              100,
+              100,
+              114,
+              101,
+              115,
+              115,
+              34,
+              58,
+              32,
+              123,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              122,
+              105,
+              112,
+              34,
+              58,
+              32,
+              34,
+              122,
+              105,
+              112,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              99,
+              111,
+              117,
+              110,
+              116,
+              114,
+              121,
+              34,
+              58,
+              32,
+              34,
+              99,
+              111,
+              117,
+              110,
+              116,
+              114,
+              121,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              99,
+              105,
+              116,
+              121,
+              34,
+              58,
+              32,
+              34,
+              99,
+              105,
+              116,
+              121,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              115,
+              116,
+              114,
+              101,
+              101,
+              116,
+              34,
+              58,
+              32,
+              34,
+              115,
+              116,
+              114,
+              101,
+              101,
+              116,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              105,
+              100,
+              34,
+              58,
+              32,
+              54,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              115,
+              116,
+              97,
+              116,
+              101,
+              34,
+              58,
+              32,
+              34,
+              115,
+              116,
+              97,
+              116,
+              101,
+              34,
+              10,
+              32,
+              32,
+              125,
+              44,
+              10,
+              32,
+              32,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              32,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              44,
+              10,
+              32,
+              32,
+              34,
+              105,
+              100,
+              34,
+              58,
+              32,
+              48,
+              44,
+              10,
+              32,
+              32,
+              34,
+              98,
+              105,
+              114,
+              116,
+              104,
+              68,
+              97,
+              116,
+              101,
+              34,
+              58,
+              32,
+              34,
+              98,
+              105,
+              114,
+              116,
+              104,
+              68,
+              97,
+              116,
+              101,
+              34,
+              44,
+              10,
+              32,
+              32,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              32,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              10,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 208,
+          "responseSize": 221
+        },
+        "id": "e67bdd21-0b81-4044-8f45-6c0b8598457b"
+      },
+      {
+        "cursor": {
+          "ref": "08c96a8e-04e1-46a9-97ea-d3bb9a7bad9b",
+          "length": 5,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "56d4de97-bd81-4810-8d5e-9844c5e79159"
+        },
+        "item": {
+          "id": "b4f7cbf9-cb02-4755-8c69-cf9f798fd6dd",
+          "name": "Datos Usuario Personal",
+          "request": {
+            "description": {
+              "content": "Obtener los datos de un usuario",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "users",
+                "getusersById",
+                "{{newuserId}}"
+              ],
+              "host": [
+                "{{url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "313ea1fa-da94-4323-9723-3d7a658ba02d",
+                "type": "text/javascript",
+                "exec": [
+                  "user_id = pm.environment.get(\"newuserIdcrear\");",
+                  "if(user_id == 0){",
+                  "    pm.test(\"El usuario NO fue creado\", function () {",
+                  "        pm.expect(pm.response.text()).to.include(user_id) });",
+                  "}else{",
+                  "    pm.test(\"El usuario fue creado\");",
+                  "};",
+                  "",
+                  "",
+                  ""
+                ],
+                "_lastExecutionId": "ee6884bb-77d0-4134-a3c1-106ab8ade88a"
+              }
+            }
+          ]
+        },
+        "request": {
+          "description": {
+            "content": "Obtener los datos de un usuario",
+            "type": "text/plain"
+          },
+          "url": {
+            "protocol": "http",
+            "port": "8080",
+            "path": [
+              "users",
+              "getusersById",
+              "2"
+            ],
+            "host": [
+              "ae18e1b01af7b11eaa41c06d6ebd0c1d-2089794148",
+              "us-west-2",
+              "elb",
+              "amazonaws",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.26.0",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "fedbe2bb-7d30-4f59-b41b-02c82fdd0733",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "ae18e1b01af7b11eaa41c06d6ebd0c1d-2089794148.us-west-2.elb.amazonaws.com:8080",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "41773fe0-905e-407f-b653-533292caa026",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 16 Jun 2020 04:02:22 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              10,
+              32,
+              32,
+              34,
+              97,
+              100,
+              100,
+              114,
+              101,
+              115,
+              115,
+              34,
+              58,
+              32,
+              123,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              122,
+              105,
+              112,
+              34,
+              58,
+              32,
+              34,
+              122,
+              105,
+              112,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              99,
+              111,
+              117,
+              110,
+              116,
+              114,
+              121,
+              34,
+              58,
+              32,
+              34,
+              99,
+              111,
+              117,
+              110,
+              116,
+              114,
+              121,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              99,
+              105,
+              116,
+              121,
+              34,
+              58,
+              32,
+              34,
+              99,
+              105,
+              116,
+              121,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              115,
+              116,
+              114,
+              101,
+              101,
+              116,
+              34,
+              58,
+              32,
+              34,
+              115,
+              116,
+              114,
+              101,
+              101,
+              116,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              105,
+              100,
+              34,
+              58,
+              32,
+              54,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              115,
+              116,
+              97,
+              116,
+              101,
+              34,
+              58,
+              32,
+              34,
+              115,
+              116,
+              97,
+              116,
+              101,
+              34,
+              10,
+              32,
+              32,
+              125,
+              44,
+              10,
+              32,
+              32,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              32,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              44,
+              10,
+              32,
+              32,
+              34,
+              105,
+              100,
+              34,
+              58,
+              32,
+              48,
+              44,
+              10,
+              32,
+              32,
+              34,
+              98,
+              105,
+              114,
+              116,
+              104,
+              68,
+              97,
+              116,
+              101,
+              34,
+              58,
+              32,
+              34,
+              98,
+              105,
+              114,
+              116,
+              104,
+              68,
+              97,
+              116,
+              101,
+              34,
+              44,
+              10,
+              32,
+              32,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              32,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              10,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 181,
+          "responseSize": 221
+        },
+        "id": "b4f7cbf9-cb02-4755-8c69-cf9f798fd6dd",
+        "assertions": [
+          {
+            "assertion": "El usuario NO fue creado",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "7d623ac7-2252-4cd5-a3d5-adf19ec4b458",
+          "length": 5,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "5b2f9071-451a-4297-b858-96bca0af1ef5"
+        },
+        "item": {
+          "id": "4f465209-4fb0-4cb2-8e9f-42106f2899e5",
+          "name": "Actualizar Usuario",
+          "request": {
+            "url": {
+              "path": [
+                "users",
+                "updateUsersById",
+                "{{userId}}"
+              ],
+              "host": [
+                "{{url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{userId}},\n  \"name\": \"{{UpdateUBI-name}}\",\n  \"email\": \"{{email}}\",\n  \"birthDate\": \"{{birthDate}}\",\n  \"address\": {\n    \"id\": {{addressId}},\n    \"street\": \"{{street}}\",\n    \"state\": \"{{state}}\",\n    \"city\": \"{{city}}\",\n    \"country\": \"{{country}}\",\n    \"zip\": \"{{zip}}\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "e453df17-75ca-4859-9b1e-8460053b438c",
+                "type": "text/javascript",
+                "exec": [
+                  "var var_name = pm.response.json().name;",
+                  "if(var_name == \"name\"){",
+                  "    pm.test(\"El usuario NO fue actualizado - UpdateById FALLA\", function () {",
+                  "        pm.expect(pm.response.text()).to.include(var_name) });",
+                  "}else{",
+                  "    pm.test(\"El usuario fue actualizado\");",
+                  "};"
+                ],
+                "_lastExecutionId": "8867e2e1-bb8f-4132-be1a-26f94a82d040"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8080",
+            "path": [
+              "users",
+              "updateUsersById",
+              "0"
+            ],
+            "host": [
+              "ae18e1b01af7b11eaa41c06d6ebd0c1d-2089794148",
+              "us-west-2",
+              "elb",
+              "amazonaws",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.26.0",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "af256220-476b-4983-af41-1cdc50e9f70f",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "ae18e1b01af7b11eaa41c06d6ebd0c1d-2089794148.us-west-2.elb.amazonaws.com:8080",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": 250,
+              "system": true
+            }
+          ],
+          "method": "PUT",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"id\": 0,\n  \"name\": \"Jose Actualizado\",\n  \"email\": \"jose.berrocal@pucp.pe\",\n  \"birthDate\": \"12/12/1987\",\n  \"address\": {\n    \"id\": 6,\n    \"street\": \"La Calle\",\n    \"state\": \"Lince\",\n    \"city\": \"Lima\",\n    \"country\": \"Peru\",\n    \"zip\": \"2345\"\n  }\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "1fa34b59-ebf5-4439-b8a4-43ade9515193",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 16 Jun 2020 04:02:22 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              10,
+              32,
+              32,
+              34,
+              97,
+              100,
+              100,
+              114,
+              101,
+              115,
+              115,
+              34,
+              58,
+              32,
+              123,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              122,
+              105,
+              112,
+              34,
+              58,
+              32,
+              34,
+              122,
+              105,
+              112,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              99,
+              111,
+              117,
+              110,
+              116,
+              114,
+              121,
+              34,
+              58,
+              32,
+              34,
+              99,
+              111,
+              117,
+              110,
+              116,
+              114,
+              121,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              99,
+              105,
+              116,
+              121,
+              34,
+              58,
+              32,
+              34,
+              99,
+              105,
+              116,
+              121,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              115,
+              116,
+              114,
+              101,
+              101,
+              116,
+              34,
+              58,
+              32,
+              34,
+              115,
+              116,
+              114,
+              101,
+              101,
+              116,
+              34,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              105,
+              100,
+              34,
+              58,
+              32,
+              54,
+              44,
+              10,
+              32,
+              32,
+              32,
+              32,
+              34,
+              115,
+              116,
+              97,
+              116,
+              101,
+              34,
+              58,
+              32,
+              34,
+              115,
+              116,
+              97,
+              116,
+              101,
+              34,
+              10,
+              32,
+              32,
+              125,
+              44,
+              10,
+              32,
+              32,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              32,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              44,
+              10,
+              32,
+              32,
+              34,
+              105,
+              100,
+              34,
+              58,
+              32,
+              48,
+              44,
+              10,
+              32,
+              32,
+              34,
+              98,
+              105,
+              114,
+              116,
+              104,
+              68,
+              97,
+              116,
+              101,
+              34,
+              58,
+              32,
+              34,
+              98,
+              105,
+              114,
+              116,
+              104,
+              68,
+              97,
+              116,
+              101,
+              34,
+              44,
+              10,
+              32,
+              32,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              58,
+              32,
+              34,
+              101,
+              109,
+              97,
+              105,
+              108,
+              34,
+              10,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 171,
+          "responseSize": 221
+        },
+        "id": "4f465209-4fb0-4cb2-8e9f-42106f2899e5",
+        "assertions": [
+          {
+            "assertion": "El usuario NO fue actualizado - UpdateById FALLA",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "79d6cca1-bec7-491a-a4c2-4b56b3853f3c",
+          "length": 5,
+          "cycles": 1,
+          "position": 4,
+          "iteration": 0,
+          "httpRequestId": "1bc405b8-6946-4bec-9f68-e33460e03df4"
+        },
+        "item": {
+          "id": "2ec4e6e5-742e-435b-808b-d23e8edf7479",
+          "name": "Eliminar Usuario",
+          "request": {
+            "url": {
+              "path": [
+                "users",
+                "deleteUsersById",
+                "{{userId}}"
+              ],
+              "host": [
+                "{{url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "DELETE",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": {{userId}},\n  \"name\": \"{{UpdateUBI-name}}\",\n  \"email\": \"{{email}}\",\n  \"birthDate\": \"{{birthDate}}\",\n  \"address\": {\n    \"id\": {{addressId}},\n    \"street\": \"{{street}}\",\n    \"state\": \"{{state}}\",\n    \"city\": \"{{city}}\",\n    \"country\": \"{{country}}\",\n    \"zip\": \"{{zip}}\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "e453df17-75ca-4859-9b1e-8460053b438c",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "_lastExecutionId": "6dca2ec0-de8b-47db-9116-35a5c8443d7f"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "http",
+            "port": "8080",
+            "path": [
+              "users",
+              "deleteUsersById",
+              "0"
+            ],
+            "host": [
+              "ae18e1b01af7b11eaa41c06d6ebd0c1d-2089794148",
+              "us-west-2",
+              "elb",
+              "amazonaws",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.26.0",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "b47c6fe1-f409-4b29-b3e3-401c3a0b8181",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "ae18e1b01af7b11eaa41c06d6ebd0c1d-2089794148.us-west-2.elb.amazonaws.com:8080",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": 250,
+              "system": true
+            }
+          ],
+          "method": "DELETE",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"id\": 0,\n  \"name\": \"Jose Actualizado\",\n  \"email\": \"jose.berrocal@pucp.pe\",\n  \"birthDate\": \"12/12/1987\",\n  \"address\": {\n    \"id\": 6,\n    \"street\": \"La Calle\",\n    \"state\": \"Lince\",\n    \"city\": \"Lima\",\n    \"country\": \"Peru\",\n    \"zip\": \"2345\"\n  }\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "e0539963-f295-41f0-93bd-124cc6d4115e",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 16 Jun 2020 04:02:23 GMT"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Transfer-Encoding",
+              "value": "chunked"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": []
+          },
+          "cookie": [],
+          "responseTime": 173,
+          "responseSize": 0
+        },
+        "id": "2ec4e6e5-742e-435b-808b-d23e8edf7479",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "transfers": {
+      "responseTotal": 1167
+    },
+    "failures": [],
+    "error": null
+  }
+}
