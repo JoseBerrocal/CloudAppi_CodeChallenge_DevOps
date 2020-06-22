@@ -25,6 +25,7 @@ pipeline {
            when { anyOf {
                branch 'master' 
                branch 'infra'
+               ///branch 'update'
            }}       
 
              steps {
@@ -36,13 +37,13 @@ pipeline {
                 echo 'Creación del EKS Cluster'
                 sh "./infraestructure/create.sh EKS-Cluster-CA infraestructure/eks_cluster.yml infraestructure/eks_cluster-params.json"
                 sh "sleep 900"
-                echo 'Creación del EKS Cluster satisfactorio'               
+                echo 'Creación del EKS Cluster satisfactorio'             
                 echo 'Creación de Nodos EKS'
                 sh "./infraestructure/create.sh EKS-API-Nodos infraestructure/eks_nodegroup.yml infraestructure/eks_nodegroup-params.json"
-                sh "sleep 240"
-                echo 'Creación de Nodos EKS satisfactorio'
-                sh "aws eks --region us-west-2 update-kubeconfig --name ClusterEKS-CA"                
-                sh "kubectl config use-context arn:aws:eks:us-west-2:545867861938:cluster/ClusterEKS-CA"
+                sh "sleep 240"  
+                echo 'Creación de Nodos EKS satisfactorio'  
+                sh "aws eks --region us-west-2 update-kubeconfig --name ClusterEKS-CA"              
+                sh "kubectl config use-context arn:aws:eks:us-west-2:032559070163:cluster/ClusterEKS-CA"
                 sh "sleep 5"
                 sh "kubectl get svc"
                 sh "sleep 5"       
@@ -66,6 +67,7 @@ pipeline {
                branch 'master' 
                branch 'desple_api'
                branch 'appv2_ima'
+               branch 'update'
            }}          
 
              steps {
@@ -85,6 +87,7 @@ pipeline {
                branch 'master' 
                branch 'desple_api'
                branch 'appv2_ima'
+               branch 'update'
            }}          
            
              steps {
@@ -105,6 +108,7 @@ pipeline {
                branch 'master' 
                branch 'desple_api'
                branch 'appv2_ima'
+               branch 'update'
            }}           
              steps {
                 echo 'Remover la imagen Docker'
@@ -119,6 +123,7 @@ pipeline {
                branch 'master' 
                branch 'desple_api'
                branch 'appv2_ima'
+               branch 'update'
            }}           
              steps {
                  echo 'Desplegar la web API'

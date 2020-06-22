@@ -13,11 +13,11 @@
     },
     {
         "ParameterKey": "NodeImageId",
-        "ParameterValue": "ami-0e710550577202c55"
+        "ParameterValue": "ami-003634241a8fcdec0"
     },
     {
         "ParameterKey": "KeyName",
-        "ParameterValue": "new_pair_ec2"
+        "ParameterValue": "jb_aws_keypair"
     }
 
 ]

@@ -22,7 +22,7 @@ Resources:
       Name: !Ref ClusterName
       Version: '1.14'
       RoleArn: >-
-        arn:aws:iam::545867861938:role/EKS-Service-Role
+        arn:aws:iam::032559070163:role/EKS-Service-Role
       ResourcesVpcConfig:
         SecurityGroupIds:
           - Fn::ImportValue:
