@@ -13,11 +13,11 @@
     },
     {
         "ParameterKey": "NodeImageId",
-        "ParameterValue": "ami-003634241a8fcdec0"
+        "ParameterValue": "ami-0c2a77d3d158749aa"
     },
     {
         "ParameterKey": "KeyName",
-        "ParameterValue": "jb_aws_keypair"
+        "ParameterValue": "eks-cluster-kep_pair"
     }
 
 ]

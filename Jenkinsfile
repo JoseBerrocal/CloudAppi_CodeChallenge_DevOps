@@ -25,19 +25,19 @@ pipeline {
            when { anyOf {
                branch 'master' 
                branch 'infra'
-               ///branch 'update'
+               branch 'update'
            }}       
 
              steps {
-                echo 'Creación del VPC para el EKS'
+                /*echo 'Creación del VPC para el EKS'
                 sh "aws s3 ls"
                 sh "./infraestructure/create.sh CloudAppi-Infra infraestructure/ourinfra.yml infraestructure/ourinfra-params.json"
                 sh "sleep 100"
-                echo 'Creación del VPC para el EKS satisfactorio'
+                echo 'Creación del VPC para el EKS satisfactorio' 
                 echo 'Creación del EKS Cluster'
                 sh "./infraestructure/create.sh EKS-Cluster-CA infraestructure/eks_cluster.yml infraestructure/eks_cluster-params.json"
                 sh "sleep 900"
-                echo 'Creación del EKS Cluster satisfactorio'             
+                echo 'Creación del EKS Cluster satisfactorio'     */        
                 echo 'Creación de Nodos EKS'
                 sh "./infraestructure/create.sh EKS-API-Nodos infraestructure/eks_nodegroup.yml infraestructure/eks_nodegroup-params.json"
                 sh "sleep 240"  
